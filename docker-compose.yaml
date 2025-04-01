@@ -1,0 +1,36 @@
+
+services:
+  chat-api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: chat-api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_URL=mongodb://host.docker.internal:27017/gpt
+      - SMTP_HOST=smtp.example.com
+      - SMTP_USER=username
+      - SMTP_PASS=password
+      - SITE_URL=http://54.87.4.36:8080
+    networks:
+      - chat-network
+
+  chat-ui:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: chat-ui
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_API_URL=/api
+    depends_on:
+      - chat-api
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge
