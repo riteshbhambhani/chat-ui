@@ -1,146 +1,127 @@
-# ChatGPT
-This clone is made with MERN and uses OpenAI API.
+# 🌬️ AireStacks
 
-This project is clone of chatGPT , chatGPT is an AI . It's allows you to have human-like conversations.
+AireStacks is a full-stack AI assistant platform powered by OpenAI’s ChatGPT. It features a modular architecture with a RESTful API backend and a dynamic frontend UI—all containerized with Docker Compose for smooth development and deployment.
 
-## Features
+---
 
-- PWA
-- Offline
-- Password login
-- Forgot password
-- Google login & signup
-- Chat 
-- Auto chat save
-- History Save
-- Account delete option
-- Light & Dark mode
-- Responsive Design
+## 🚀 Features
 
-## Prerequisites
+- 🔌 API service (`chat-api`) to handle AI requests and email-based flows
+- 🖥️ Frontend (`chat-ui`) built for interactive AI conversations
+- 📦 Docker Compose setup for seamless local deployment
+- 🌐 Environment-based configuration for flexibility
+- ✉️ Built-in SMTP support for email notifications
 
-- get your api key from https://openai.com/api/
+---
 
-Make sure you have installed all of the following prerequisites on your development machine:
+## 🧰 Tech Stack
 
-- Node Js & Npm [Download and Install](https://nodejs.org/en)
-- MongoDB [Download and Install](https://www.mongodb.com/docs/manual/installation/)
-- Git [Download and Install](https://git-scm.com/downloads)
+- Backend: Node.js/Express (in `server`)
+- Frontend: Vite + React (in `client`)
+- Database: MongoDB (expected to be accessible externally)
+- Containerization: Docker & Docker Compose
 
-## Technology Used
+---
 
-#vite #reactjs #scss #redux-toolkit
+## 📦 Project Structure
 
-#nodejs #expressjs #mongodb #jsonwebtoken authentication 
-
-#javascript
-
-#openai #chatgpt
-
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file in server directory
-
-`PORT` = `5000`
-
-`MONGO_URL`
-
-`SITE_URL`
-
-`JWT_PRIVATE_KEY`
-
-`OPENAI_API_KEY`
-
-`OPENAI_ORGANIZATION`
-
-`MAIL_EMAIL`
-
-`MAIL_SECRET`
-
-To run this project, you will need to add the following environment variables to your .env.local file in client directory
-
-`VITE_CLIENT_ID` #Google login api client id
-
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/ansonbenny/ChatGPT.git
+```
+AireStacks/
+├── client/              # Frontend React App
+├── server/              # Backend API
+├── docker-compose.yaml  # Multi-container orchestration
+├── .env                 # Environment variable configuration (create this)
+└── README.md
 ```
 
-##To Start BackEnd
+---
 
-Go to the server directory
+## ⚙️ Environment Variables
 
-```bash
-  cd ChatGPT/server
+These are set directly in `docker-compose.yaml`, but can be abstracted to a `.env` file if preferred.
+
+### `chat-api` service
+
+```env
+PORT=3000
+DB_URL=mongodb://host.docker.internal:27017/gpt
+SMTP_HOST=smtp.example.com
+SMTP_USER=username
+SMTP_PASS=password
+SITE_URL=http://localhost:8080
 ```
 
-Install dependencies
+### `chat-ui` service
 
-```bash
-  npm install
+```env
+VITE_API_URL=http://chat-api:3000
 ```
 
-Start
+> 📌 **Note:** Replace placeholder values (`smtp.example.com`, credentials, DB connection) with your own.
+
+---
+
+## 🐳 Running with Docker Compose
+
+### 1. Clone the Repo
 
 ```bash
-  npm start
+git clone https://github.com/yourusername/airestacks.git
+cd airestacks
 ```
 
-##To Start FrontEnd
-
-Go to the client directory
+### 2. Build and Run the App
 
 ```bash
-  cd ChatGPT/client
+docker-compose up --build
 ```
 
-Install dependencies
+Or to run in the background:
 
 ```bash
-  npm install
+docker-compose up -d --build
 ```
 
-Start
+### 3. Stop the App
 
 ```bash
-  npm run dev
+docker-compose down
 ```
 
+---
 
-## Demo
+## 🔁 Changing Ports
 
-[Live](https://chatgpt-8z57.onrender.com)
+If you change the internal app port (like `3000` for the API or `80` for the UI), make sure to update it in:
 
-https://user-images.githubusercontent.com/94070164/236692494-a50edafc-7864-439a-9cb3-fa112abc00a6.mp4
+- The `ports` mapping inside `docker-compose.yaml`
+- All corresponding environment variables (like `PORT` and `VITE_API_URL`)
 
-![Screenshot_2023-04-28_12-45-28](https://user-images.githubusercontent.com/94070164/236693044-a4884b84-a058-46ba-ae50-0f9b50f92f02.png)
+```yaml
+# Example: changing backend port to 4000
+ports:
+  - "4000:4000"
+environment:
+  - PORT=4000
+  - VITE_API_URL=http://chat-api:4000
+```
 
-![Screenshot_2023-04-28_12-45-42](https://user-images.githubusercontent.com/94070164/236693067-fdf687ce-fafc-495b-9b1e-ad19ae18a339.png)
+---
 
-![Screenshot_2023-04-28_12-45-55](https://user-images.githubusercontent.com/94070164/236693075-429a387d-91d8-495a-afe4-84201ad43ef2.png)
+## 🧪 Testing & Development
 
-![auth](https://user-images.githubusercontent.com/94070164/236693311-13089e93-3b50-4187-8203-b122a7016b71.png)
+You can open the frontend at [http://localhost:8080](http://localhost:8080) and the backend (if exposed) at [http://localhost:3000](http://localhost:3000).
 
-![login](https://user-images.githubusercontent.com/94070164/236693346-08e08ae2-c265-4743-b9f6-e4899c4168bb.png)
+Use `docker-compose logs -f` to view real-time container logs.
 
-![login2](https://user-images.githubusercontent.com/94070164/236693355-f976a480-8a98-4b2b-92d0-542bdd03957c.png)
+---
 
-![forgot](https://user-images.githubusercontent.com/94070164/236693362-ceff0f29-d7bd-4787-9445-df65b00650ff.png)
+## 📬 Contributing
 
-![reg](https://user-images.githubusercontent.com/94070164/236693371-97fe8ed6-f33b-4f4e-a195-8ef4d0f8b78f.png)
+We welcome contributions! Fork the repo, open issues, and submit pull requests with improvements.
 
-![reg2](https://user-images.githubusercontent.com/94070164/236693378-dba41424-ca47-4b57-861f-508d8c3b8f5b.png)
+---
 
-![offline](https://user-images.githubusercontent.com/94070164/236693384-d3c86f92-b773-46e4-823c-79c26004737d.png)
+## 📝 License
 
-![Screenshot_2023-04-28_19-28-07](https://user-images.githubusercontent.com/94070164/236693084-8e6df9e7-9e12-427d-a63f-1123145e50f8.png)
-
-![app](https://user-images.githubusercontent.com/94070164/236693396-32687dc4-cf32-45a8-8e93-5a1e9fefa1c1.png)
-
-
-
-## 🔗 Links
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anson-benny-502961238/)
+MIT License. See the [LICENSE](./LICENSE) file for details.
