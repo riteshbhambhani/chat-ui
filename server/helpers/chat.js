@@ -1,6 +1,12 @@
 import { db } from "../db/connection.js";
 import collections from "../db/collections.js";
 import { ObjectId } from "mongodb";
+import dotnet from "dotenv";
+dotnet.config();
+const beckyUrl = process.env.BECKY_AI_API_URL;
+
+import axios from "axios";
+//18.234.146.125
 
 export default {
     newResponse: (prompt, openai , userId) => {
@@ -72,70 +78,42 @@ export default {
             }
         })
     },
-    getChat: (userId, chatId) => {
-        return new Promise(async (resolve, reject) => {
-            let res = await db.collection(collections.CHAT).aggregate([
-                {
-                    $match: {
-                        user: userId.toString()
-                    }
-                }, {
-                    $unwind: '$data'
-                }, {
-                    $match: {
-                        'data.chatId': chatId
-                    }
-                }, {
-                    $project: {
-                        _id: 0,
-                        chat: '$data.chats'
-                    }
-                }
-            ]).toArray().catch((err) => [
-                reject(err)
-            ])
+    getChat: async (chatId, authToken) => {
+        const data = JSON.stringify({
+            "chat_id": chatId,
+            "auth_token": authToken
+        });
+        const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `${beckyUrl}/retrieve_messages`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data : data
+        };
+        const apiResponse = await axios(config);
 
-            if (res && Array.isArray(res) && res[0]?.chat) {
-                resolve(res[0].chat)
-            } else {
-                reject({ status: 404 })
-            }
-        })
+        return apiResponse.data;
     },
-    getHistory: (userId) => {
-        return new Promise(async (resolve, reject) => {
-            let res = await db.collection(collections.CHAT).aggregate([
-                {
-                    $match: {
-                        user: userId.toString()
-                    }
-                }, {
-                    $unwind: '$data'
-                }, {
-                    $project: {
-                        _id: 0,
-                        chatId: '$data.chatId',
-                        prompt: {
-                            $arrayElemAt: ['$data.chats.prompt', 0]
-                        }
-                    }
-                }, {
-                    $limit: 10
-                }, {
-                    $sort: {
-                        chatId: -1
-                    }
-                }
-            ]).toArray().catch((err) => {
-                reject(err)
-            })
+    getHistory: async (authToken) => {
+        const data = JSON.stringify({
+            "auth_token": authToken
+        });
+        const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: `${beckyUrl}/history_list`,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data : data
+        };
+        const apiResponse = await axios(config);
 
-            if (Array.isArray(res)) {
-                resolve(res)
-            } else {
-                reject({ text: "DB Getting Some Error" })
-            }
-        })
+        return apiResponse.data.history_list;
     },
     deleteAllChat: (userId) => {
         return new Promise((resolve, reject) => {

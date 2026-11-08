@@ -76,12 +76,12 @@ router.post('/signup', CheckLogged, async (req, res) => {
 
                         html = html.replace('[URL]', `${process.env.SITE_URL}/signup/pending/${response._id}`)
                         html = html.replace('[TITLE]', 'Verify your email address')
-                        html = html.replace('[CONTENT]', 'To continue setting up your OpenAI account, please verify that this is your email address.')
+                        html = html.replace('[CONTENT]', 'To continue setting up your AireStacks account, please verify that this is your email address.')
                         html = html.replace('[BTN_NAME]', 'Verify email address')
 
                         sendMail({
                             to: req.body.email,
-                            subject: `OpenAI - Verify your email`,
+                            subject: `AireStacks - Verify your email`,
                             html
                         })
 
@@ -249,7 +249,7 @@ router.get('/login', CheckLogged, async (req, res) => {
                 })
 
                 res.status(200)
-                    .cookie("userToken", token, { httpOnly: true, expires: new Date(Date.now() + 604800000) })
+                    .cookie("userToken", token, { httpOnly: true, secure: true, sameSite: 'none', expires: new Date(Date.now() + 604800000) })
                     .json({
                         status: 200,
                         message: 'Success',
@@ -321,7 +321,7 @@ router.post('/forgot-request', CheckLogged, async (req, res) => {
 
                         sendMail({
                             to: req.body.email,
-                            subject: `Change password for OpenAI`,
+                            subject: `Change password for Airestacks`,
                             html
                         })
 
@@ -471,7 +471,7 @@ router.delete('/account', async (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-    res.clearCookie('userToken').status(200).json({
+    res.clearCookie('userToken', {httpOnly: true,secure: true, sameSite: 'none'}).status(200).json({
         status: 200,
         message: 'LogOut'
     })

@@ -32,7 +32,6 @@ const Menu = ({ changeColorMode }) => {
         alert(err)
       } finally {
         if (res?.data?.status === 200) {
-          alert("Done")
           dispatch(emptyUser())
           navigate('/login')
         }
@@ -131,7 +130,7 @@ const Menu = ({ changeColorMode }) => {
 
         <div className='title'>
           {
-            path.length > 6 ? history[0]?.prompt : 'New chat'
+            path.length > 6 ? history[0]?.content : 'New chat'
           }
         </div>
 
@@ -145,6 +144,8 @@ const Menu = ({ changeColorMode }) => {
           }}><Plus /></button>
         </div>
       </header>
+
+      <RecentChats/>
 
       <div className="menu" ref={menuRef}>
         <div>
@@ -171,7 +172,7 @@ const Menu = ({ changeColorMode }) => {
                   <button key={key}
                     className='active'
                     onClick={() => {
-                      navigate(`/chat/${obj?.chatId}`)
+                      navigate(`/chat/${obj?.role}`)
                     }}
                   ><Message />
                     {obj?.prompt}
@@ -181,9 +182,9 @@ const Menu = ({ changeColorMode }) => {
                 return (
                   <button key={key}
                     onClick={() => {
-                      navigate(`/chat/${obj?.chatId}`)
+                      navigate(`/chat/${obj?.role}`)
                     }}
-                  ><Message />{obj?.prompt}</button>)
+                  >{obj?.content}</button>)
               }
             })
           }

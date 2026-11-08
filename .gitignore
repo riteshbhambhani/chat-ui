@@ -1,1 +1,7 @@
-server/.env 
+git_instructions.txt
+instructions.txt
+.env
+
+client/node_modules
+client/dist/
+server/node_modules
